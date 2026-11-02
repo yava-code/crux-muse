@@ -1,0 +1,693 @@
+{
+  "root": "Col",
+  "components": {
+    "Col": {
+      "signature": "Col(children: any[], gap?: number)",
+      "description": "Vertical stack."
+    },
+    "Row": {
+      "signature": "Row(children: any[], gap?: number)",
+      "description": "Horizontal row that wraps."
+    },
+    "Card": {
+      "signature": "Card(children: any[])",
+      "description": "A framed group."
+    },
+    "Divider": {
+      "signature": "Divider()",
+      "description": "A thin line between parts."
+    },
+    "Title": {
+      "signature": "Title(text: string, size?: \"sm\" | \"md\" | \"lg\" | \"xl\" | \"2xl\" | \"3xl\")",
+      "description": "Heading; lg for the answer's conclusion."
+    },
+    "Text": {
+      "signature": "Text(text: string, size?: \"xs\" | \"sm\" | \"md\" | \"lg\")",
+      "description": "A paragraph."
+    },
+    "Caption": {
+      "signature": "Caption(text: string)",
+      "description": "Small grey note."
+    },
+    "List": {
+      "signature": "List(items: (string | ListItem)[])",
+      "description": "Numbered list of concrete actions."
+    },
+    "ListItem": {
+      "signature": "ListItem(title: string, description?: string)",
+      "description": "One action: title, and a line on why."
+    },
+    "Button": {
+      "signature": "Button(label: string, action?: ActionExpression, variant?: \"solid\" | \"outline\" | \"soft\" | \"ghost\")",
+      "description": "A follow-up question; its action is @ToAssistant(\"question in first person\")."
+    },
+    "Fight": {
+      "signature": "Fight(id: string)",
+      "description": "Chip of any fight by id (\"f12\"): its time and chance before and after; opens the fight. Use instead of typing a fight's numbers."
+    },
+    "MomentCard": {
+      "signature": "MomentCard(fight: string, show: \"replay\" | \"ready\" | \"whatif\" | \"concepts\" | \"deaths\"[], note?: string)",
+      "description": "Card of one main fight (a moments id). `show` lists the proofs in the order to show them: replay (minimap replay), ready (ultimates, BKB, TP ready at the first second), whatif (only if the fight has whatif), concepts (team facts), deaths (heroes dead before it). `note` is one short line, contrast done -> should have done."
+    },
+    "BkbPicture": {
+      "signature": "BkbPicture()",
+      "description": "Timeline of when each hero of both teams bought BKB, with the three main fights marked. For matches decided by BKB timings (signals bkb)."
+    },
+    "GoldPicture": {
+      "signature": "GoldPicture()",
+      "description": "Net worth difference per minute, your lead above zero, enemy lead below. For matches decided by farm (signals nw)."
+    },
+    "LeadPicture": {
+      "signature": "LeadPicture()",
+      "description": "Win chance curve with its peak and the fall after it. For a won position that was lost (signals lead)."
+    },
+    "VisionPicture": {
+      "signature": "VisionPicture()",
+      "description": "Wards of both teams and, for the fights where vision cost chance, how many enemies each side saw. For matches lost in the dark (signals vision)."
+    },
+    "DeathsPicture": {
+      "signature": "DeathsPicture()",
+      "description": "Every time a hero died shortly before a fight and was not back for it, on the match timeline. For matches lost by feeding before fights (signals deaths)."
+    },
+    "FightFrame": {
+      "signature": "FightFrame(fight: string)",
+      "description": "Minimap at the first second of main fight `fight` (one of the moments ids): where all ten heroes stood and what was ready. For a match one fight decided."
+    },
+    "Chain": {
+      "signature": "Chain(links: ChainLink[], title?: string)",
+      "description": "The chain of causes across the match: 3-5 ChainLinks, drawn in time order on the match timeline; each opens its fight."
+    },
+    "ChainLink": {
+      "signature": "ChainLink(id: string, text: string)",
+      "description": "One link of the match chain by its id (\"c4\") and a short phrase, up to 12 words, that ties it to the next link."
+    },
+    "Habit": {
+      "signature": "Habit(slot: number, key: string, note?: string)",
+      "description": "One habit of hero `slot` against pro by its key from habits (lh_pm, deaths, wards); note is one short line for that hero."
+    },
+    "Items": {
+      "signature": "Items(slot: number)",
+      "description": "Final items of hero `slot`, as icons; each explains itself. Use when the answer talks about a hero's build."
+    },
+    "HeroAt": {
+      "signature": "HeroAt(slot: number, t: string)",
+      "description": "Hero `slot` at second t (\"mm:ss\", inside a replay window): HP and mana bars, ultimate / BKB / TP ready. Use when the answer is about one hero's state in a moment."
+    },
+    "Probe": {
+      "signature": "Probe(question: string, options: string[], t?: string)",
+      "description": "A short question back to the player about their own decision in a moment (what they saw, why they went), with 2-4 short answer options. At most one per answer, last."
+    }
+  },
+  "componentGroups": [
+    {
+      "name": "Layout",
+      "components": [
+        "Col",
+        "Row",
+        "Card",
+        "Divider"
+      ]
+    },
+    {
+      "name": "Text",
+      "components": [
+        "Title",
+        "Text",
+        "Caption",
+        "List",
+        "ListItem"
+      ]
+    },
+    {
+      "name": "Inputs",
+      "components": [
+        "Button"
+      ]
+    },
+    {
+      "name": "Match",
+      "components": [
+        "Fight",
+        "MomentCard",
+        "BkbPicture",
+        "GoldPicture",
+        "LeadPicture",
+        "VisionPicture",
+        "DeathsPicture",
+        "FightFrame",
+        "Chain",
+        "ChainLink",
+        "Habit"
+      ],
+      "notes": [
+        "- These read their numbers from the open match by id: fight \"f28\", chain link \"c4\", hero slot, habit key. Never retype their numbers."
+      ]
+    },
+    {
+      "name": "Inserts",
+      "components": [
+        "Items",
+        "HeroAt",
+        "Probe"
+      ],
+      "notes": [
+        "- Small inserts inside a short answer: a hero's items, a hero at one second, a question back to the player. Items and HeroAt read the match by slot and time."
+      ]
+    }
+  ],
+  "schema": {
+    "$schema": "https://json-schema.org/draft/2020-12/schema",
+    "type": "object",
+    "properties": {
+      "Col": {
+        "$ref": "#/$defs/Col"
+      },
+      "Row": {
+        "$ref": "#/$defs/Row"
+      },
+      "Card": {
+        "$ref": "#/$defs/Card"
+      },
+      "Divider": {
+        "$ref": "#/$defs/Divider"
+      },
+      "Title": {
+        "$ref": "#/$defs/Title"
+      },
+      "Text": {
+        "$ref": "#/$defs/Text"
+      },
+      "Caption": {
+        "$ref": "#/$defs/Caption"
+      },
+      "List": {
+        "$ref": "#/$defs/List"
+      },
+      "ListItem": {
+        "$ref": "#/$defs/ListItem"
+      },
+      "Button": {
+        "$ref": "#/$defs/Button"
+      },
+      "Fight": {
+        "$ref": "#/$defs/Fight"
+      },
+      "MomentCard": {
+        "$ref": "#/$defs/MomentCard"
+      },
+      "BkbPicture": {
+        "$ref": "#/$defs/BkbPicture"
+      },
+      "GoldPicture": {
+        "$ref": "#/$defs/GoldPicture"
+      },
+      "LeadPicture": {
+        "$ref": "#/$defs/LeadPicture"
+      },
+      "VisionPicture": {
+        "$ref": "#/$defs/VisionPicture"
+      },
+      "DeathsPicture": {
+        "$ref": "#/$defs/DeathsPicture"
+      },
+      "FightFrame": {
+        "$ref": "#/$defs/FightFrame"
+      },
+      "Chain": {
+        "$ref": "#/$defs/Chain"
+      },
+      "ChainLink": {
+        "$ref": "#/$defs/ChainLink"
+      },
+      "Habit": {
+        "$ref": "#/$defs/Habit"
+      },
+      "Items": {
+        "$ref": "#/$defs/Items"
+      },
+      "HeroAt": {
+        "$ref": "#/$defs/HeroAt"
+      },
+      "Probe": {
+        "$ref": "#/$defs/Probe"
+      }
+    },
+    "required": [
+      "Col",
+      "Row",
+      "Card",
+      "Divider",
+      "Title",
+      "Text",
+      "Caption",
+      "List",
+      "ListItem",
+      "Button",
+      "Fight",
+      "MomentCard",
+      "BkbPicture",
+      "GoldPicture",
+      "LeadPicture",
+      "VisionPicture",
+      "DeathsPicture",
+      "FightFrame",
+      "Chain",
+      "ChainLink",
+      "Habit",
+      "Items",
+      "HeroAt",
+      "Probe"
+    ],
+    "additionalProperties": false,
+    "$defs": {
+      "Col": {
+        "type": "object",
+        "properties": {
+          "children": {
+            "type": "array",
+            "items": {}
+          },
+          "gap": {
+            "type": "number"
+          }
+        },
+        "required": [
+          "children"
+        ],
+        "additionalProperties": false,
+        "description": "Vertical stack."
+      },
+      "Row": {
+        "type": "object",
+        "properties": {
+          "children": {
+            "type": "array",
+            "items": {}
+          },
+          "gap": {
+            "type": "number"
+          }
+        },
+        "required": [
+          "children"
+        ],
+        "additionalProperties": false,
+        "description": "Horizontal row that wraps."
+      },
+      "Card": {
+        "type": "object",
+        "properties": {
+          "children": {
+            "type": "array",
+            "items": {}
+          }
+        },
+        "required": [
+          "children"
+        ],
+        "additionalProperties": false,
+        "description": "A framed group."
+      },
+      "Divider": {
+        "type": "object",
+        "properties": {},
+        "additionalProperties": false,
+        "description": "A thin line between parts."
+      },
+      "Title": {
+        "type": "object",
+        "properties": {
+          "text": {
+            "type": "string"
+          },
+          "size": {
+            "type": "string",
+            "enum": [
+              "sm",
+              "md",
+              "lg",
+              "xl",
+              "2xl",
+              "3xl"
+            ]
+          }
+        },
+        "required": [
+          "text"
+        ],
+        "additionalProperties": false,
+        "description": "Heading; lg for the answer's conclusion."
+      },
+      "Text": {
+        "type": "object",
+        "properties": {
+          "text": {
+            "type": "string"
+          },
+          "size": {
+            "type": "string",
+            "enum": [
+              "xs",
+              "sm",
+              "md",
+              "lg"
+            ]
+          }
+        },
+        "required": [
+          "text"
+        ],
+        "additionalProperties": false,
+        "description": "A paragraph."
+      },
+      "Caption": {
+        "type": "object",
+        "properties": {
+          "text": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "text"
+        ],
+        "additionalProperties": false,
+        "description": "Small grey note."
+      },
+      "List": {
+        "type": "object",
+        "properties": {
+          "items": {
+            "type": "array",
+            "items": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "$ref": "#/$defs/ListItem"
+                }
+              ]
+            }
+          }
+        },
+        "required": [
+          "items"
+        ],
+        "additionalProperties": false,
+        "description": "Numbered list of concrete actions."
+      },
+      "ListItem": {
+        "type": "object",
+        "properties": {
+          "title": {
+            "type": "string"
+          },
+          "description": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "title"
+        ],
+        "additionalProperties": false,
+        "description": "One action: title, and a line on why."
+      },
+      "Button": {
+        "type": "object",
+        "properties": {
+          "label": {
+            "type": "string"
+          },
+          "action": {
+            "$ref": "#/$defs/ActionExpression"
+          },
+          "variant": {
+            "type": "string",
+            "enum": [
+              "solid",
+              "outline",
+              "soft",
+              "ghost"
+            ]
+          }
+        },
+        "required": [
+          "label"
+        ],
+        "additionalProperties": false,
+        "description": "A follow-up question; its action is @ToAssistant(\"question in first person\")."
+      },
+      "ActionExpression": {
+        "anyOf": [
+          {
+            "type": "object",
+            "properties": {
+              "type": {
+                "type": "string",
+                "const": "open_url"
+              },
+              "url": {
+                "type": "string"
+              }
+            },
+            "required": [
+              "type",
+              "url"
+            ],
+            "additionalProperties": false
+          },
+          {
+            "type": "object",
+            "properties": {
+              "type": {
+                "type": "string",
+                "const": "continue_conversation"
+              },
+              "context": {
+                "type": "string"
+              }
+            },
+            "required": [
+              "type"
+            ],
+            "additionalProperties": false
+          },
+          {
+            "type": "object",
+            "properties": {
+              "type": {
+                "type": "string"
+              },
+              "params": {
+                "type": "object",
+                "propertyNames": {
+                  "type": "string"
+                },
+                "additionalProperties": {}
+              }
+            },
+            "required": [
+              "type"
+            ],
+            "additionalProperties": false
+          }
+        ]
+      },
+      "Fight": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "id"
+        ],
+        "additionalProperties": false,
+        "description": "Chip of any fight by id (\"f12\"): its time and chance before and after; opens the fight. Use instead of typing a fight's numbers."
+      },
+      "MomentCard": {
+        "type": "object",
+        "properties": {
+          "fight": {
+            "type": "string"
+          },
+          "show": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "enum": [
+                "replay",
+                "ready",
+                "whatif",
+                "concepts",
+                "deaths"
+              ]
+            }
+          },
+          "note": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "fight",
+          "show"
+        ],
+        "additionalProperties": false,
+        "description": "Card of one main fight (a moments id). `show` lists the proofs in the order to show them: replay (minimap replay), ready (ultimates, BKB, TP ready at the first second), whatif (only if the fight has whatif), concepts (team facts), deaths (heroes dead before it). `note` is one short line, contrast done -> should have done."
+      },
+      "BkbPicture": {
+        "type": "object",
+        "properties": {},
+        "additionalProperties": false,
+        "description": "Timeline of when each hero of both teams bought BKB, with the three main fights marked. For matches decided by BKB timings (signals bkb)."
+      },
+      "GoldPicture": {
+        "type": "object",
+        "properties": {},
+        "additionalProperties": false,
+        "description": "Net worth difference per minute, your lead above zero, enemy lead below. For matches decided by farm (signals nw)."
+      },
+      "LeadPicture": {
+        "type": "object",
+        "properties": {},
+        "additionalProperties": false,
+        "description": "Win chance curve with its peak and the fall after it. For a won position that was lost (signals lead)."
+      },
+      "VisionPicture": {
+        "type": "object",
+        "properties": {},
+        "additionalProperties": false,
+        "description": "Wards of both teams and, for the fights where vision cost chance, how many enemies each side saw. For matches lost in the dark (signals vision)."
+      },
+      "DeathsPicture": {
+        "type": "object",
+        "properties": {},
+        "additionalProperties": false,
+        "description": "Every time a hero died shortly before a fight and was not back for it, on the match timeline. For matches lost by feeding before fights (signals deaths)."
+      },
+      "FightFrame": {
+        "type": "object",
+        "properties": {
+          "fight": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "fight"
+        ],
+        "additionalProperties": false,
+        "description": "Minimap at the first second of main fight `fight` (one of the moments ids): where all ten heroes stood and what was ready. For a match one fight decided."
+      },
+      "Chain": {
+        "type": "object",
+        "properties": {
+          "links": {
+            "type": "array",
+            "items": {
+              "$ref": "#/$defs/ChainLink"
+            }
+          },
+          "title": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "links"
+        ],
+        "additionalProperties": false,
+        "description": "The chain of causes across the match: 3-5 ChainLinks, drawn in time order on the match timeline; each opens its fight."
+      },
+      "ChainLink": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "text": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "id",
+          "text"
+        ],
+        "additionalProperties": false,
+        "description": "One link of the match chain by its id (\"c4\") and a short phrase, up to 12 words, that ties it to the next link."
+      },
+      "Habit": {
+        "type": "object",
+        "properties": {
+          "slot": {
+            "type": "number"
+          },
+          "key": {
+            "type": "string"
+          },
+          "note": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "slot",
+          "key"
+        ],
+        "additionalProperties": false,
+        "description": "One habit of hero `slot` against pro by its key from habits (lh_pm, deaths, wards); note is one short line for that hero."
+      },
+      "Items": {
+        "type": "object",
+        "properties": {
+          "slot": {
+            "type": "number"
+          }
+        },
+        "required": [
+          "slot"
+        ],
+        "additionalProperties": false,
+        "description": "Final items of hero `slot`, as icons; each explains itself. Use when the answer talks about a hero's build."
+      },
+      "HeroAt": {
+        "type": "object",
+        "properties": {
+          "slot": {
+            "type": "number"
+          },
+          "t": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "slot",
+          "t"
+        ],
+        "additionalProperties": false,
+        "description": "Hero `slot` at second t (\"mm:ss\", inside a replay window): HP and mana bars, ultimate / BKB / TP ready. Use when the answer is about one hero's state in a moment."
+      },
+      "Probe": {
+        "type": "object",
+        "properties": {
+          "question": {
+            "type": "string"
+          },
+          "options": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "t": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "question",
+          "options"
+        ],
+        "additionalProperties": false,
+        "description": "A short question back to the player about their own decision in a moment (what they saw, why they went), with 2-4 short answer options. At most one per answer, last."
+      }
+    }
+  }
+}

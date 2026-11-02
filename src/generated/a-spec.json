@@ -1,0 +1,362 @@
+{
+  "root": "Review",
+  "components": {
+    "Review": {
+      "signature": "Review(main: Main, chain: Chain, moments: MomentCard[], mine?: ForYou)",
+      "description": "The whole Разбор tab: Main, then Chain, then three MomentCards (the three moments, any order), then ForYou."
+    },
+    "Main": {
+      "signature": "Main(line: string, picture: BkbPicture | GoldPicture | LeadPicture | VisionPicture | DeathsPicture | FightFrame, fights?: string[])",
+      "description": "The first screen: `line` is one sentence on why this match was lost (decision, not person, contrast what was done and what should have been), `picture` is the one picture that shows it best, `fights` are 2-3 fight ids shown as proof chips."
+    },
+    "BkbPicture": {
+      "signature": "BkbPicture()",
+      "description": "Timeline of when each hero of both teams bought BKB, with the three main fights marked. For matches decided by BKB timings (signals bkb)."
+    },
+    "GoldPicture": {
+      "signature": "GoldPicture()",
+      "description": "Net worth difference per minute, your lead above zero, enemy lead below. For matches decided by farm (signals nw)."
+    },
+    "LeadPicture": {
+      "signature": "LeadPicture()",
+      "description": "Win chance curve with its peak and the fall after it. For a won position that was lost (signals lead)."
+    },
+    "VisionPicture": {
+      "signature": "VisionPicture()",
+      "description": "Wards of both teams and, for the fights where vision cost chance, how many enemies each side saw. For matches lost in the dark (signals vision)."
+    },
+    "DeathsPicture": {
+      "signature": "DeathsPicture()",
+      "description": "Every time a hero died shortly before a fight and was not back for it, on the match timeline. For matches lost by feeding before fights (signals deaths)."
+    },
+    "FightFrame": {
+      "signature": "FightFrame(fight: string)",
+      "description": "Minimap at the first second of main fight `fight` (one of the moments ids): where all ten heroes stood and what was ready. For a match one fight decided."
+    },
+    "Chain": {
+      "signature": "Chain(links: ChainLink[], title?: string)",
+      "description": "The chain of causes across the match: 3-5 ChainLinks, drawn in time order on the match timeline; each opens its fight."
+    },
+    "ChainLink": {
+      "signature": "ChainLink(id: string, text: string)",
+      "description": "One link of the match chain by its id (\"c4\") and a short phrase, up to 12 words, that ties it to the next link."
+    },
+    "MomentCard": {
+      "signature": "MomentCard(fight: string, show: \"replay\" | \"ready\" | \"whatif\" | \"concepts\" | \"deaths\"[], note?: string)",
+      "description": "Card of one main fight (a moments id). `show` lists the proofs in the order to show them: replay (minimap replay), ready (ultimates, BKB, TP ready at the first second), whatif (only if the fight has whatif), concepts (team facts), deaths (heroes dead before it). `note` is one short line, contrast done -> should have done."
+    },
+    "ForYou": {
+      "signature": "ForYou(items: Habit[])",
+      "description": "Habits block: for each of your heroes that has habits, the one or two habits that matter most. The reader picks the hero."
+    },
+    "Habit": {
+      "signature": "Habit(slot: number, key: string, note?: string)",
+      "description": "One habit of hero `slot` against pro by its key from habits (lh_pm, deaths, wards); note is one short line for that hero."
+    }
+  },
+  "componentGroups": [
+    {
+      "name": "Page",
+      "components": [
+        "Review",
+        "Main",
+        "Chain",
+        "ChainLink",
+        "MomentCard",
+        "ForYou",
+        "Habit"
+      ]
+    },
+    {
+      "name": "Pictures for Main",
+      "components": [
+        "BkbPicture",
+        "GoldPicture",
+        "LeadPicture",
+        "VisionPicture",
+        "DeathsPicture",
+        "FightFrame"
+      ],
+      "notes": [
+        "- Pick the one picture that explains THIS match, from the signals in MATCH DATA. Pictures take no numbers."
+      ]
+    }
+  ],
+  "schema": {
+    "$schema": "https://json-schema.org/draft/2020-12/schema",
+    "type": "object",
+    "properties": {
+      "Review": {
+        "$ref": "#/$defs/Review"
+      },
+      "Main": {
+        "$ref": "#/$defs/Main"
+      },
+      "BkbPicture": {
+        "$ref": "#/$defs/BkbPicture"
+      },
+      "GoldPicture": {
+        "$ref": "#/$defs/GoldPicture"
+      },
+      "LeadPicture": {
+        "$ref": "#/$defs/LeadPicture"
+      },
+      "VisionPicture": {
+        "$ref": "#/$defs/VisionPicture"
+      },
+      "DeathsPicture": {
+        "$ref": "#/$defs/DeathsPicture"
+      },
+      "FightFrame": {
+        "$ref": "#/$defs/FightFrame"
+      },
+      "Chain": {
+        "$ref": "#/$defs/Chain"
+      },
+      "ChainLink": {
+        "$ref": "#/$defs/ChainLink"
+      },
+      "MomentCard": {
+        "$ref": "#/$defs/MomentCard"
+      },
+      "ForYou": {
+        "$ref": "#/$defs/ForYou"
+      },
+      "Habit": {
+        "$ref": "#/$defs/Habit"
+      }
+    },
+    "required": [
+      "Review",
+      "Main",
+      "BkbPicture",
+      "GoldPicture",
+      "LeadPicture",
+      "VisionPicture",
+      "DeathsPicture",
+      "FightFrame",
+      "Chain",
+      "ChainLink",
+      "MomentCard",
+      "ForYou",
+      "Habit"
+    ],
+    "additionalProperties": false,
+    "$defs": {
+      "Review": {
+        "type": "object",
+        "properties": {
+          "main": {
+            "$ref": "#/$defs/Main"
+          },
+          "chain": {
+            "$ref": "#/$defs/Chain"
+          },
+          "moments": {
+            "type": "array",
+            "items": {
+              "$ref": "#/$defs/MomentCard"
+            }
+          },
+          "mine": {
+            "$ref": "#/$defs/ForYou"
+          }
+        },
+        "required": [
+          "main",
+          "chain",
+          "moments"
+        ],
+        "additionalProperties": false,
+        "description": "The whole Разбор tab: Main, then Chain, then three MomentCards (the three moments, any order), then ForYou."
+      },
+      "Main": {
+        "type": "object",
+        "properties": {
+          "line": {
+            "type": "string"
+          },
+          "picture": {
+            "anyOf": [
+              {
+                "$ref": "#/$defs/BkbPicture"
+              },
+              {
+                "$ref": "#/$defs/GoldPicture"
+              },
+              {
+                "$ref": "#/$defs/LeadPicture"
+              },
+              {
+                "$ref": "#/$defs/VisionPicture"
+              },
+              {
+                "$ref": "#/$defs/DeathsPicture"
+              },
+              {
+                "$ref": "#/$defs/FightFrame"
+              }
+            ]
+          },
+          "fights": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          }
+        },
+        "required": [
+          "line",
+          "picture"
+        ],
+        "additionalProperties": false,
+        "description": "The first screen: `line` is one sentence on why this match was lost (decision, not person, contrast what was done and what should have been), `picture` is the one picture that shows it best, `fights` are 2-3 fight ids shown as proof chips."
+      },
+      "BkbPicture": {
+        "type": "object",
+        "properties": {},
+        "additionalProperties": false,
+        "description": "Timeline of when each hero of both teams bought BKB, with the three main fights marked. For matches decided by BKB timings (signals bkb)."
+      },
+      "GoldPicture": {
+        "type": "object",
+        "properties": {},
+        "additionalProperties": false,
+        "description": "Net worth difference per minute, your lead above zero, enemy lead below. For matches decided by farm (signals nw)."
+      },
+      "LeadPicture": {
+        "type": "object",
+        "properties": {},
+        "additionalProperties": false,
+        "description": "Win chance curve with its peak and the fall after it. For a won position that was lost (signals lead)."
+      },
+      "VisionPicture": {
+        "type": "object",
+        "properties": {},
+        "additionalProperties": false,
+        "description": "Wards of both teams and, for the fights where vision cost chance, how many enemies each side saw. For matches lost in the dark (signals vision)."
+      },
+      "DeathsPicture": {
+        "type": "object",
+        "properties": {},
+        "additionalProperties": false,
+        "description": "Every time a hero died shortly before a fight and was not back for it, on the match timeline. For matches lost by feeding before fights (signals deaths)."
+      },
+      "FightFrame": {
+        "type": "object",
+        "properties": {
+          "fight": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "fight"
+        ],
+        "additionalProperties": false,
+        "description": "Minimap at the first second of main fight `fight` (one of the moments ids): where all ten heroes stood and what was ready. For a match one fight decided."
+      },
+      "Chain": {
+        "type": "object",
+        "properties": {
+          "links": {
+            "type": "array",
+            "items": {
+              "$ref": "#/$defs/ChainLink"
+            }
+          },
+          "title": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "links"
+        ],
+        "additionalProperties": false,
+        "description": "The chain of causes across the match: 3-5 ChainLinks, drawn in time order on the match timeline; each opens its fight."
+      },
+      "ChainLink": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "text": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "id",
+          "text"
+        ],
+        "additionalProperties": false,
+        "description": "One link of the match chain by its id (\"c4\") and a short phrase, up to 12 words, that ties it to the next link."
+      },
+      "MomentCard": {
+        "type": "object",
+        "properties": {
+          "fight": {
+            "type": "string"
+          },
+          "show": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "enum": [
+                "replay",
+                "ready",
+                "whatif",
+                "concepts",
+                "deaths"
+              ]
+            }
+          },
+          "note": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "fight",
+          "show"
+        ],
+        "additionalProperties": false,
+        "description": "Card of one main fight (a moments id). `show` lists the proofs in the order to show them: replay (minimap replay), ready (ultimates, BKB, TP ready at the first second), whatif (only if the fight has whatif), concepts (team facts), deaths (heroes dead before it). `note` is one short line, contrast done -> should have done."
+      },
+      "ForYou": {
+        "type": "object",
+        "properties": {
+          "items": {
+            "type": "array",
+            "items": {
+              "$ref": "#/$defs/Habit"
+            }
+          }
+        },
+        "required": [
+          "items"
+        ],
+        "additionalProperties": false,
+        "description": "Habits block: for each of your heroes that has habits, the one or two habits that matter most. The reader picks the hero."
+      },
+      "Habit": {
+        "type": "object",
+        "properties": {
+          "slot": {
+            "type": "number"
+          },
+          "key": {
+            "type": "string"
+          },
+          "note": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "slot",
+          "key"
+        ],
+        "additionalProperties": false,
+        "description": "One habit of hero `slot` against pro by its key from habits (lh_pm, deaths, wards); note is one short line for that hero."
+      }
+    }
+  }
+}
