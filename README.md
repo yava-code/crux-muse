@@ -36,6 +36,14 @@ replay ──► Syntropy engine (private) ──► match JSON ──► Muse S
 - **Grounding** ([`safe.ts`](src/lib/a/safe.ts)). Before a line of Muse output reaches the browser, the server checks it against the match JSON: every time, percent and fight ID has to exist in the match, and an effect can't come before the cause it names. A line that fails is dropped.
 - **Cost.** Every call is priced and logged, with daily caps per tier. On the free tier, Muse writes the first review of each day.
 
+## Syntropy Link: Muse as an MCP agent
+
+`link/server.py` serves a parsed match over MCP: `match_summary`, `state` (every hero at a given second), `events`, `fights`, `win_chance`. `link/agent.py` gives Muse those tools and leaves it alone. In a real run on match 9044139133, Muse pulled the fights, found the one that swung the game, took the hero `state` at 11:58, read the `events` of the fight and answered:
+
+> Don't take 5 vs 4 at 11:58 without Necrophos ultimate (ult_cd 54.0) and with your carry at 6271,-4939. You fed a Razor Eye fight 4 to 0 and flipped 51.0 to 31.8.
+
+Every number there came from a tool call. The run took 29 s, 17k input and 2.9k output tokens on `muse-spark-1.3-contributor`.
+
 ## Files
 
 | file | what it does |
